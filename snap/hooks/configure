@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+url="$(snapctl get url)"
+
+if [ -z "$url" ]; then
+    echo "The URL or the journal upload service is required."
+    echo "The service has been disabled."
+    snapctl stop ${SNAP_NAME}.upload
+    exit 0
+fi
+
+# Create the config file
+echo "Setting up the configuration file"
+echo "[Upload]" > /etc/systemd/journal-upload.conf
+echo "URL=$url" >> /etc/systemd/journal-upload.conf
+
+# Restart the service
+echo "Restarting the service"
+snapctl restart ${SNAP_NAME}.upload
+

@@ -1,0 +1,34 @@
+name: logsync 
+base: core18
+version: '0.1'
+summary: Enables upload of logs to a remote server
+description: |
+  Enables upload of systemd logs to a remote server
+
+grade: stable
+confinement: strict
+
+plugs:
+  config-logsync:
+    interface: system-files
+    read:
+      - /etc/systemd
+    write:
+      - /etc/systemd/journal-upload.conf
+
+apps:
+  upload:
+    command: lib/systemd/systemd-journal-upload --save-state=/var/snap/logsync/current/state
+    plugs:
+      - network-bind
+      - network
+      - config-logsync
+      - log-observe
+    daemon: simple
+
+parts:
+  upload:
+    plugin: nil
+    stage-packages:
+      - systemd-journal-remote
+
