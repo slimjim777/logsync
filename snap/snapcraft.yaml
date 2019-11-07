@@ -1,9 +1,10 @@
-name: logsync 
+name: logsync-james
 base: core18
 version: '0.1'
 summary: Enables upload of logs to a remote server
 description: |
-  Enables upload of systemd logs to a remote server
+  Simple example snap to show how to send journal messages from a device
+  to a remote journal server.
 
 grade: stable
 confinement: strict
@@ -31,4 +32,3 @@ parts:
     plugin: nil
     stage-packages:
       - systemd-journal-remote
-
