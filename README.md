@@ -17,3 +17,19 @@ sudo snap connect logsync:log-observe
 sudo snap connect logsync:config-logsync
 snap connections logsync
 ```
+
+## Configure the snap
+Set up log-sync over HTTP:
+```
+sudo snap set logsync url="http://example.com:19532"
+```
+
+Set up log-sync with custom certificates:
+```
+sudo snap set logsync url="https://example.com:19532"
+sudo snap set logsync cert="/path/to/pem-encoded/certificate"
+sudo snap set logsync key="/path/to/pem-encoded/certificate-key"
+sudo snap set logsync ca=`LS0tLS1CRUdJTiBSU0EgUFJJVkFUR...`
+```
+The certificate settings (`cert`, `key` and `ca`) can be a path to a file or the
+base64-encoded file.
