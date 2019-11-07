@@ -1,7 +1,27 @@
 #!/bin/sh -e
 
-url="$(snapctl get url)"
+# Store the encoded file and return the path
+base64ToFile() {
+  local src=$1
+  filename=$2
 
+  # Check if we have a file path
+  if [ -f "$src" ]; then
+    filename=$src
+    return
+  fi
+
+  # Should be a base64-encoded file
+  echo $src | base64 -d > $filename
+}
+
+# Get the config values
+url="$(snapctl get url)"
+cert="$(snapctl get cert)"
+key="$(snapctl get key)"
+ca="$(snapctl get ca)"
+
+# Cannot do anything without a URL
 if [ -z "$url" ]; then
     echo "The URL or the journal upload service is required."
     echo "The service has been disabled."
@@ -14,7 +34,20 @@ echo "Setting up the configuration file"
 echo "[Upload]" > /etc/systemd/journal-upload.conf
 echo "URL=$url" >> /etc/systemd/journal-upload.conf
 
+# Add the TLS certificate options
+if [ -n "$cert" ]; then
+    base64ToFile "$cert" "/var/snap/${SNAP_NAME}/current/upload.cert"
+    echo "ServerCertificateFile=$filename" >> /etc/systemd/journal-upload.conf
+fi
+if [ -n "$key" ]; then
+    base64ToFile "$key" "/var/snap/${SNAP_NAME}/current/upload.key"
+    echo "ServerKeyFile=$filename" >> /etc/systemd/journal-upload.conf
+fi
+if [ -n "$ca" ]; then
+    base64ToFile "$ca" "/var/snap/${SNAP_NAME}/current/upload.ca"
+    echo "TrustedCertificateFile=$filename" >> /etc/systemd/journal-upload.conf
+fi
+
 # Restart the service
 echo "Restarting the service"
 snapctl restart ${SNAP_NAME}.upload
-
