@@ -17,6 +17,11 @@ plugs:
     write:
       - /etc/systemd/journal-upload.conf
 
+hooks:
+  configure:
+    plugs:
+      - config-logsync
+
 apps:
   upload:
     command: lib/systemd/systemd-journal-upload --save-state=/var/snap/logsync/current/state
