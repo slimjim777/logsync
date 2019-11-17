@@ -9,28 +9,22 @@ description: |
 grade: stable
 confinement: strict
 
-plugs:
-  config-logsync:
-    interface: system-files
-    read:
-      - /etc/systemd
-    write:
-      - /etc/systemd/journal-upload.conf
-
-hooks:
-  configure:
-    plugs:
-      - config-logsync
+layout:
+  /etc/systemd/journal-upload.conf:
+    bind-file: $SNAP_DATA/journal-upload.conf
 
 apps:
   upload:
     command: lib/systemd/systemd-journal-upload --save-state=$SNAP_DATA/state
     plugs:
+      - daemon-notify
       - network-bind
+      - network-control
       - network
-      - config-logsync
       - log-observe
+      - time-control # this quietens log spam at access of /proc/1/environ
     daemon: simple
+    watchdog-timeout: 3m
 
 parts:
   upload:

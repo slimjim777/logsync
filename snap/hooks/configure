@@ -33,6 +33,8 @@ fi
 # Create the config file (overwriting the existing one)
 echo "Setting up the configuration file"
 echo "[Upload]" > /etc/systemd/journal-upload.conf
+# remove executable bit to quieten log spam on startup
+chmod -x /etc/systemd/journal-upload.conf
 echo "URL=$url" >> /etc/systemd/journal-upload.conf
 
 # Add the TLS certificate options
