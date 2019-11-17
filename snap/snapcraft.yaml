@@ -24,7 +24,7 @@ hooks:
 
 apps:
   upload:
-    command: lib/systemd/systemd-journal-upload --save-state=/var/snap/logsync/current/state
+    command: lib/systemd/systemd-journal-upload --save-state=$SNAP_DATA/state
     plugs:
       - network-bind
       - network
