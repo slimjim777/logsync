@@ -9,18 +9,9 @@ description: |
 grade: stable
 confinement: strict
 
-plugs:
-  config-logsync:
-    interface: system-files
-    read:
-      - /etc/systemd
-    write:
-      - /etc/systemd/journal-upload.conf
-
-hooks:
-  configure:
-    plugs:
-      - config-logsync
+layout:
+  /etc/systemd/journal-upload.conf:
+    bind-file: $SNAP_DATA/journal-upload.conf
 
 apps:
   upload:
