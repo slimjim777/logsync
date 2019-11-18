@@ -26,11 +26,14 @@ apps:
   upload:
     command: lib/systemd/systemd-journal-upload --save-state=$SNAP_DATA/state
     plugs:
+      - daemon-notify
       - network-bind
+      - network-control
       - network
-      - config-logsync
       - log-observe
+      - time-control # this quietens log spam at access of /proc/1/environ
     daemon: simple
+    watchdog-timeout: 3m
 
 parts:
   upload:
