@@ -32,21 +32,23 @@ fi
 
 # Create the config file (overwriting the existing one)
 echo "Setting up the configuration file"
-echo "[Upload]" > /etc/systemd/journal-upload.conf
-echo "URL=$url" >> /etc/systemd/journal-upload.conf
+echo "[Upload]" > $SNAP_DATA/systemd/journal-upload.conf
+# remove executable bit to quieten log spam on startup
+chmod -x $SNAP_DATA/systemd/journal-upload.conf
+echo "URL=$url" >> $SNAP_DATA/systemd/journal-upload.conf
 
 # Add the TLS certificate options
 if [ -n "$cert" ]; then
     filename=$(base64ToFile "$cert" "/var/snap/${SNAP_NAME}/current/upload.cert")
-    echo "ServerCertificateFile=$filename" >> /etc/systemd/journal-upload.conf
+    echo "ServerCertificateFile=$filename" >> $SNAP_DATA/systemd/journal-upload.conf
 fi
 if [ -n "$key" ]; then
     filename=$(base64ToFile "$key" "/var/snap/${SNAP_NAME}/current/upload.key")
-    echo "ServerKeyFile=$filename" >> /etc/systemd/journal-upload.conf
+    echo "ServerKeyFile=$filename" >> $SNAP_DATA/systemd/journal-upload.conf
 fi
 if [ -n "$ca" ]; then
     filename=$(base64ToFile "$ca" "/var/snap/${SNAP_NAME}/current/upload.ca")
-    echo "TrustedCertificateFile=$filename" >> /etc/systemd/journal-upload.conf
+    echo "TrustedCertificateFile=$filename" >> $SNAP_DATA/systemd/journal-upload.conf
 fi
 
 # Restart the service

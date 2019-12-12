@@ -6,25 +6,26 @@ description: |
   Simple example snap to show how to send journal messages from a device
   to a remote journal server.
 
+  To run the snap you need to connect a few interfaces and set a receiver url
+  like below
+
+  sudo snap connect logsync-james:daemon-notify
+  sudo snap connect logsync-james:time-control
+  sudo snap connect logsync-james:network-control
+  sudo snap connect logsync-james:log-observe
+  sudo snap set logsync-james url="http://<ip of the machine running logsync-receiver>"
+
 grade: stable
 confinement: strict
 
-plugs:
-  config-logsync:
-    interface: system-files
-    write:
-      - /etc/systemd/journal-upload.conf
-
-hooks:
-  configure:
-    plugs:
-      - config-logsync
+layout:
+  /etc/systemd:
+    bind: $SNAP_DATA/systemd
 
 apps:
   upload:
     command: lib/systemd/systemd-journal-upload --save-state=$SNAP_DATA/state
     plugs:
-      - config-logsync
       - daemon-notify
       - network-bind
       - network-control
