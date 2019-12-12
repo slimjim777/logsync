@@ -1,3 +1,0 @@
-#! /bin/sh
-
-snapctl restart ${SNAP_NAME}.upload 2>&1 || true
