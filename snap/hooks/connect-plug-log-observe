@@ -1,0 +1,8 @@
+#! /bin/sh
+
+url="$(snapctl get url)"
+
+# only restart if we are configured already
+if [ -n "$url" ]; then
+  snapctl restart ${SNAP_NAME}.upload 2>&1 || true
+fi
