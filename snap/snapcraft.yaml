@@ -1,6 +1,6 @@
 name: logsync-james
 base: core18
-version: '0.2'
+version: '0.3'
 summary: Enables upload of logs to a remote server
 description: |
   Simple example snap to show how to send journal messages from a device
